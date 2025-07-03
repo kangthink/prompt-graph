@@ -54,9 +54,19 @@ bun run preview
 - 시스템 메시지와 사용자 메시지 구분 표시
 - 첨부된 이미지 미리보기
 
+### 📋 노드 상세보기
+- 노드 더블클릭으로 상세 정보 모달 열기
+- 노드 타입별 정보 표시 (텍스트/출력/이미지)
+- 원클릭 텍스트 복사 기능 (📋 버튼)
+- 출력 노드 실행 상태 시각화 (로딩/완료/오류/대기)
+- 이미지 노드 미리보기 및 파일 정보
+- 긴 텍스트 스크롤 지원
+
 ### 🤖 AI 모델 지원
-- **OpenAI**: GPT-3.5, GPT-4, GPT-4 Turbo, GPT-4o, GPT-4 Vision
-- **Anthropic**: Claude 3 Haiku, Sonnet, Opus
+- **OpenAI**: GPT-4o, GPT-4o Mini, GPT-4 Turbo, GPT-4, GPT-3.5 Turbo
+- **Anthropic**: Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Sonnet, Claude 3 Haiku
+- **Google**: Gemini 1.5 Pro, Gemini 1.5 Flash, Gemini Pro, Gemini Pro Vision
+- **Ollama (로컬)**: Llama 3.2/3.1/3/2, Mistral, CodeLlama, LLaVA, BakLLaVA, Gemma 2, Qwen 2.5
 - 모델별 텍스트/멀티모달 지원 구분
 - 커스텀 API 엔드포인트 지원
 
@@ -99,6 +109,15 @@ bun run preview
 3. 이미지 설명 추가 (선택사항)
 4. 멀티모달 지원 모델과 연결하여 실행
 
+### 6. 노드 상세보기
+1. 원하는 노드를 **더블클릭**하여 상세 정보 모달 열기
+2. 노드별 정보 확인:
+   - **텍스트 노드**: 입력 내용, 글자 수
+   - **출력 노드**: AI 응답, 실행 상태, 글자 수  
+   - **이미지 노드**: 파일 정보, 이미지 미리보기, 설명
+3. 📋 복사 버튼으로 텍스트 원클릭 복사
+4. 모달 외부 클릭 또는 ✕ 버튼으로 닫기
+
 ## 템플릿 시스템
 
 ### 기본 템플릿
@@ -124,7 +143,8 @@ prompt-graph/
 │   │   ├── OutputNode.tsx      # 출력 노드 (체인 연결 지원)
 │   │   ├── CustomEdge.tsx      # 프롬프트 엣지 (템플릿 지원)
 │   │   ├── SettingsPanel.tsx   # 설정 패널
-│   │   └── PromptPreviewPanel.tsx # 프롬프트 미리보기 패널
+│   │   ├── PromptPreviewPanel.tsx # 프롬프트 미리보기 패널
+│   │   └── NodeDetailPanel.tsx # 노드 상세보기 패널 (복사 기능)
 │   ├── services/               # 비즈니스 로직
 │   │   └── llmService.ts       # LLM API 호출 서비스 (템플릿 처리)
 │   ├── main.tsx            # 앱 엔트리 포인트
@@ -139,14 +159,62 @@ prompt-graph/
 
 ## 지원 모델
 
-### 텍스트 전용 모델
-- GPT-3.5 Turbo
-- GPT-4
+### 🔥 OpenAI (API 키 필요)
+| 모델 | 멀티모달 | 설명 |
+|------|----------|------|
+| GPT-4o | ✅ | 최신 멀티모달 모델, 텍스트/이미지 처리 |
+| GPT-4o Mini | ✅ | 경량화된 GPT-4o, 비용 효율적 |
+| GPT-4 Turbo | ✅ | 향상된 성능, 멀티모달 지원 |
+| GPT-4 | ❌ | 고품질 텍스트 생성 |
+| GPT-3.5 Turbo | ❌ | 빠르고 비용 효율적 |
 
-### 멀티모달 모델 (텍스트 + 이미지)
-- GPT-4 Turbo
-- GPT-4o  
-- GPT-4 Vision Preview
-- Claude 3 Haiku
-- Claude 3 Sonnet
-- Claude 3 Opus 
+### 🧠 Anthropic Claude (API 키 필요)
+| 모델 | 멀티모달 | 설명 |
+|------|----------|------|
+| Claude 3.5 Sonnet | ✅ | 최신 모델, 뛰어난 추론 능력 |
+| Claude 3 Opus | ✅ | 가장 강력한 Claude 모델 |
+| Claude 3 Sonnet | ✅ | 균형잡힌 성능 |
+| Claude 3 Haiku | ✅ | 빠른 응답 속도 |
+
+### 🌟 Google Gemini (API 키 필요)
+| 모델 | 멀티모달 | 설명 |
+|------|----------|------|
+| Gemini 1.5 Pro | ✅ | 대용량 컨텍스트, 멀티모달 |
+| Gemini 1.5 Flash | ✅ | 빠른 처리 속도 |
+| Gemini Pro Vision | ✅ | 이미지 분석 특화 |
+| Gemini Pro | ❌ | 범용 텍스트 처리 |
+
+### 🏠 Ollama (로컬 실행, 무료)
+| 모델 | 멀티모달 | 설명 |
+|------|----------|------|
+| Llama 3.2 | ❌ | Meta의 최신 오픈소스 모델 |
+| Llama 3.1 | ❌ | 향상된 Llama 3, 긴 컨텍스트 |
+| Llama 3 | ❌ | 뛰어난 성능의 오픈소스 모델 |
+| Llama 2 | ❌ | 안정적인 성능 |
+| Mistral | ❌ | 유럽의 오픈소스 모델 |
+| CodeLlama | ❌ | 코드 생성 특화 |
+| LLaVA | ✅ | 오픈소스 멀티모달 모델 |
+| BakLLaVA | ✅ | 개선된 LLaVA |
+| Gemma 2 | ❌ | Google의 오픈소스 모델 |
+| Qwen 2.5 | ❌ | Alibaba의 다국어 모델 |
+
+### 📝 설정 방법
+1. **API 키 발급**:
+   - OpenAI: https://platform.openai.com/api-keys
+   - Anthropic: https://console.anthropic.com/
+   - Google: https://makersuite.google.com/app/apikey
+
+2. **Ollama 설치** (로컬 실행):
+   ```bash
+   # macOS/Linux
+   curl -fsSL https://ollama.com/install.sh | sh
+   
+   # Windows
+   # https://ollama.com/download에서 다운로드
+   ```
+
+3. **앱에서 설정**:
+   - ⚙️ 설정 버튼 클릭
+   - API 키 입력 또는 Ollama 로컬 설정
+   - 원하는 모델 선택
+   - 저장 후 사용 시작 
