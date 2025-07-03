@@ -43,8 +43,15 @@ export default function PromptPreviewPanel({
     return parts.join('\n');
   };
 
-  const getSystemMessage = () => previewData.prompt;
+  const getSystemMessage = () => {
+    // 시스템 프롬프트에서 {입력} 템플릿을 실제 입력으로 치환
+    const inputText = formatInput(previewData.input);
+    return previewData.prompt.replace(/\{입력\}/g, inputText);
+  };
+  
   const getUserMessage = () => formatInput(previewData.input);
+  
+  const getRawPrompt = () => previewData.prompt;
   
   const overlayStyle = {
     position: 'fixed' as const,
@@ -195,10 +202,31 @@ export default function PromptPreviewPanel({
           </div>
 
           <div style={sectionStyle}>
-            <label style={labelStyle}>시스템 메시지 (프롬프트)</label>
+            <label style={labelStyle}>원본 프롬프트 템플릿</label>
+            <div style={{
+              ...messageBoxStyle,
+              background: '#f8f9fa',
+              border: '1px solid #e9ecef'
+            }}>
+              {getRawPrompt() || '(프롬프트가 설정되지 않았습니다)'}
+            </div>
+          </div>
+
+          <div style={sectionStyle}>
+            <label style={labelStyle}>처리된 시스템 메시지</label>
             <div style={systemMessageStyle}>
               {getSystemMessage() || '(프롬프트가 설정되지 않았습니다)'}
             </div>
+            {getRawPrompt().includes('{입력}') && (
+              <div style={{
+                fontSize: '10px',
+                color: '#666',
+                marginTop: '4px',
+                fontStyle: 'italic'
+              }}>
+                💡 {'{입력}'} 템플릿이 사용자 입력으로 치환되었습니다
+              </div>
+            )}
           </div>
 
           <div style={sectionStyle}>
@@ -219,7 +247,7 @@ export default function PromptPreviewPanel({
             )}
           </div>
 
-          {!getSystemMessage() && (
+          {!getRawPrompt() && (
             <div style={{
               background: '#fff3cd',
               border: '1px solid #ffeaa7',
@@ -253,7 +281,7 @@ export default function PromptPreviewPanel({
           <button 
             style={executeBtnStyle} 
             onClick={onExecute}
-            disabled={!getSystemMessage() || !getUserMessage()}
+            disabled={!getRawPrompt() || !getUserMessage()}
           >
             🚀 실행
           </button>

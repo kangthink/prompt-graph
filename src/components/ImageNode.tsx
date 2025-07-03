@@ -13,6 +13,8 @@ export default function ImageNode({ data, id }: NodeProps<ImageNodeData>) {
   const { deleteElements } = useReactFlow();
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(data.description || '');
+  const [isEditingLabel, setIsEditingLabel] = useState(false);
+  const [label, setLabel] = useState(data.label || '');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +39,21 @@ export default function ImageNode({ data, id }: NodeProps<ImageNodeData>) {
   const handleDescriptionCancel = () => {
     setDescription(data.description || '');
     setIsEditing(false);
+  };
+
+  const handleLabelSave = () => {
+    data.label = label;
+    setIsEditingLabel(false);
+  };
+
+  const handleLabelCancel = () => {
+    setLabel(data.label || '');
+    setIsEditingLabel(false);
+  };
+
+  const handleLabelDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditingLabel(true);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -69,7 +86,22 @@ export default function ImageNode({ data, id }: NodeProps<ImageNodeData>) {
   const labelStyle = {
     fontWeight: 'bold',
     color: '#2c3e50',
-    fontSize: '14px'
+    fontSize: '14px',
+    cursor: 'pointer',
+    padding: '2px 4px',
+    borderRadius: '3px',
+    transition: 'background-color 0.2s'
+  };
+
+  const labelInputStyle = {
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    fontSize: '14px',
+    background: 'white',
+    border: '1px solid #ff6b6b',
+    borderRadius: '3px',
+    padding: '2px 4px',
+    outline: 'none'
   };
 
   const buttonStyle = {
@@ -181,10 +213,60 @@ export default function ImageNode({ data, id }: NodeProps<ImageNodeData>) {
     fontStyle: 'italic'
   };
 
+  const labelButtonContainerStyle = {
+    display: 'flex',
+    gap: '4px',
+    marginTop: '4px'
+  };
+
+  const smallButtonStyle = {
+    padding: '2px 6px',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '10px'
+  };
+
   return (
     <div style={nodeStyle}>
       <div style={headerStyle}>
-        <span style={labelStyle}>{data.label}</span>
+        {isEditingLabel ? (
+          <div style={{ flex: 1 }}>
+            <input
+              style={labelInputStyle}
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleLabelSave();
+                if (e.key === 'Escape') handleLabelCancel();
+              }}
+              placeholder="노드 제목을 입력하세요"
+              autoFocus
+            />
+            <div style={labelButtonContainerStyle}>
+              <button 
+                style={{...smallButtonStyle, background: '#4CAF50', color: 'white'}} 
+                onClick={handleLabelSave}
+              >
+                저장
+              </button>
+              <button 
+                style={{...smallButtonStyle, background: '#f44336', color: 'white'}} 
+                onClick={handleLabelCancel}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        ) : (
+          <span 
+            style={labelStyle}
+            onDoubleClick={handleLabelDoubleClick}
+            title="더블클릭하여 제목 편집"
+          >
+            {data.label}
+          </span>
+        )}
         <div style={buttonGroupStyle}>
           <button 
             style={buttonStyle}
@@ -203,13 +285,6 @@ export default function ImageNode({ data, id }: NodeProps<ImageNodeData>) {
         </div>
       </div>
       
-      <button 
-        style={uploadButtonStyle}
-        onClick={() => fileInputRef.current?.click()}
-      >
-        📷 이미지 업로드
-      </button>
-      
       <input
         ref={fileInputRef}
         type="file"
@@ -218,21 +293,34 @@ export default function ImageNode({ data, id }: NodeProps<ImageNodeData>) {
         style={{ display: 'none' }}
       />
       
+      <button 
+        style={uploadButtonStyle}
+        onClick={() => fileInputRef.current?.click()}
+      >
+        📁 이미지 업로드
+      </button>
+      
       <div style={imageContainerStyle}>
         {data.imageUrl ? (
           <div>
-            <img src={data.imageUrl} alt="업로드된 이미지" style={imageStyle} />
+            <img 
+              src={data.imageUrl} 
+              alt="업로드된 이미지" 
+              style={imageStyle}
+            />
             {data.fileName && (
-              <div style={fileNameStyle}>{data.fileName}</div>
+              <div style={fileNameStyle}>
+                📎 {data.fileName}
+              </div>
             )}
           </div>
         ) : (
           <div style={placeholderStyle}>
-            이미지를 업로드하면 여기에 미리보기가 표시됩니다
+            이미지를 업로드하세요
           </div>
         )}
       </div>
-
+      
       {isEditing ? (
         <div>
           <textarea
@@ -247,15 +335,17 @@ export default function ImageNode({ data, id }: NodeProps<ImageNodeData>) {
             <button style={cancelButtonStyle} onClick={handleDescriptionCancel}>취소</button>
           </div>
         </div>
-      ) : data.description ? (
-        <div style={descriptionStyle}>
-          {data.description.length > 100 
-            ? `${data.description.substring(0, 100)}...` 
-            : data.description}
-        </div>
       ) : (
-        <div style={{ fontSize: '11px', color: '#999', textAlign: 'center' as const }}>
-          클릭하여 이미지 설명 추가
+        <div>
+          {data.description ? (
+            <div style={descriptionStyle}>
+              <strong>설명:</strong> {data.description}
+            </div>
+          ) : (
+            <div style={{ ...placeholderStyle, marginBottom: '8px' }}>
+              ✏️ 버튼을 클릭하여 이미지 설명 추가
+            </div>
+          )}
         </div>
       )}
       

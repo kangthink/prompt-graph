@@ -14,15 +14,36 @@ interface SettingsPanelProps {
 }
 
 const AVAILABLE_MODELS = [
-  { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo (텍스트 전용)', multimodal: false },
-  { value: 'gpt-4', label: 'GPT-4 (텍스트 전용)', multimodal: false },
-  { value: 'gpt-4-turbo', label: 'GPT-4 Turbo (멀티모달)', multimodal: true },
+  // OpenAI 모델
   { value: 'gpt-4o', label: 'GPT-4o (멀티모달)', multimodal: true },
   { value: 'gpt-4o-mini', label: 'GPT-4o Mini (멀티모달)', multimodal: true },
-  { value: 'gpt-4-vision-preview', label: 'GPT-4 Vision (멀티모달)', multimodal: true },
-  { value: 'claude-3-haiku', label: 'Claude 3 Haiku (멀티모달)', multimodal: true },
-  { value: 'claude-3-sonnet', label: 'Claude 3 Sonnet (멀티모달)', multimodal: true },
-  { value: 'claude-3-opus', label: 'Claude 3 Opus (멀티모달)', multimodal: true },
+  { value: 'gpt-4-turbo', label: 'GPT-4 Turbo (멀티모달)', multimodal: true },
+  { value: 'gpt-4', label: 'GPT-4', multimodal: false },
+  { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo', multimodal: false },
+  
+  // Anthropic Claude 모델
+  { value: 'claude-3-5-sonnet-20241022', label: 'Claude 3.5 Sonnet (최신, 멀티모달)', multimodal: true },
+  { value: 'claude-3-opus-20240229', label: 'Claude 3 Opus (멀티모달)', multimodal: true },
+  { value: 'claude-3-sonnet-20240229', label: 'Claude 3 Sonnet (멀티모달)', multimodal: true },
+  { value: 'claude-3-haiku-20240307', label: 'Claude 3 Haiku (멀티모달)', multimodal: true },
+  
+  // Google Gemini 모델
+  { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro (멀티모달)', multimodal: true },
+  { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash (멀티모달)', multimodal: true },
+  { value: 'gemini-pro', label: 'Gemini Pro', multimodal: false },
+  { value: 'gemini-pro-vision', label: 'Gemini Pro Vision (멀티모달)', multimodal: true },
+  
+  // Ollama 로컬 모델 (인기 모델들)
+  { value: 'ollama:llama3.2', label: 'Ollama: Llama 3.2 (로컬)', multimodal: false },
+  { value: 'ollama:llama3.1', label: 'Ollama: Llama 3.1 (로컬)', multimodal: false },
+  { value: 'ollama:llama3', label: 'Ollama: Llama 3 (로컬)', multimodal: false },
+  { value: 'ollama:llama2', label: 'Ollama: Llama 2 (로컬)', multimodal: false },
+  { value: 'ollama:mistral', label: 'Ollama: Mistral (로컬)', multimodal: false },
+  { value: 'ollama:codellama', label: 'Ollama: CodeLlama (로컬)', multimodal: false },
+  { value: 'ollama:llava', label: 'Ollama: LLaVA (로컬, 멀티모달)', multimodal: true },
+  { value: 'ollama:bakllava', label: 'Ollama: BakLLaVA (로컬, 멀티모달)', multimodal: true },
+  { value: 'ollama:gemma2', label: 'Ollama: Gemma 2 (로컬)', multimodal: false },
+  { value: 'ollama:qwen2.5', label: 'Ollama: Qwen 2.5 (로컬)', multimodal: false },
 ];
 
 export default function SettingsPanel({ 
@@ -176,18 +197,33 @@ export default function SettingsPanel({
         
         <div style={contentStyle}>
           <div style={formGroupStyle}>
-            <label style={labelStyle} htmlFor="apiKey">API 키</label>
+            <label style={labelStyle} htmlFor="apiKey">API 키 * (필수)</label>
             <input
-              style={inputStyle}
+              style={{
+                ...inputStyle,
+                borderColor: !formData.apiKey ? '#e74c3c' : '#ddd'
+              }}
               id="apiKey"
               type="password"
               value={formData.apiKey}
               onChange={(e) => handleInputChange('apiKey', e.target.value)}
-              placeholder="API 키를 입력하세요"
+              placeholder="API 키를 입력하세요 (OpenAI/Anthropic/Gemini)"
             />
             <small style={smallStyle}>
-              OpenAI API 키 또는 Anthropic API 키를 입력하세요
+              • OpenAI: sk-로 시작하는 키 (https://platform.openai.com/api-keys)<br/>
+              • Anthropic: 일반 문자열 키 (https://console.anthropic.com/)<br/>
+              • Gemini: Google AI Studio에서 발급 (https://makersuite.google.com/app/apikey)<br/>
+              • Ollama: 로컬 모델의 경우 임의 문자열 입력 (예: "local")
             </small>
+            {!formData.apiKey && (
+              <div style={{
+                fontSize: '12px',
+                color: '#e74c3c',
+                marginTop: '4px'
+              }}>
+                ⚠️ API 키가 없으면 프롬프트를 실행할 수 없습니다
+              </div>
+            )}
           </div>
           
           <div style={formGroupStyle}>
@@ -233,10 +269,12 @@ export default function SettingsPanel({
               type="text"
               value={formData.baseUrl || ''}
               onChange={(e) => handleInputChange('baseUrl', e.target.value)}
-              placeholder="https://api.openai.com/v1"
+              placeholder="https://api.openai.com/v1 (또는 http://localhost:11434 for Ollama)"
             />
             <small style={smallStyle}>
-              커스텀 API 엔드포인트를 사용하는 경우에만 입력
+              • 기본값: OpenAI(https://api.openai.com/v1), Claude(https://api.anthropic.com/v1), Gemini(자동)<br/>
+              • Ollama: http://localhost:11434 (기본 포트)<br/>
+              • 프록시나 커스텀 엔드포인트를 사용하는 경우에만 변경
             </small>
           </div>
         </div>
@@ -245,7 +283,16 @@ export default function SettingsPanel({
           <button style={cancelBtnStyle} onClick={onClose}>
             취소
           </button>
-          <button style={saveBtnStyle} onClick={handleSave}>
+          <button 
+            style={{
+              ...saveBtnStyle,
+              opacity: !formData.apiKey || !formData.model ? 0.5 : 1,
+              cursor: !formData.apiKey || !formData.model ? 'not-allowed' : 'pointer'
+            }} 
+            onClick={handleSave}
+            disabled={!formData.apiKey || !formData.model}
+            title={!formData.apiKey || !formData.model ? 'API 키와 모델을 모두 설정해주세요' : ''}
+          >
             저장
           </button>
         </div>

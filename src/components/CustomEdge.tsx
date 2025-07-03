@@ -24,7 +24,8 @@ export default function CustomEdge({
   data,
 }: EdgeProps<PromptEdgeData>) {
   const [isEditing, setIsEditing] = useState(false);
-  const [prompt, setPrompt] = useState(data?.prompt || '프롬프트를 입력하세요');
+  const [prompt, setPrompt] = useState(data?.prompt || '다음 입력을 처리해주세요: {입력}');
+  const [clickTimeout, setClickTimeout] = useState<number | null>(null);
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -43,8 +44,39 @@ export default function CustomEdge({
   };
 
   const handleCancel = () => {
-    setPrompt(data?.prompt || '프롬프트를 입력하세요');
+    setPrompt(data?.prompt || '다음 입력을 처리해주세요: {입력}');
     setIsEditing(false);
+  };
+
+  // 클릭과 더블클릭을 구분하여 처리
+  const handleClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    
+    // 더블클릭 타임아웃이 있으면 클리어 (더블클릭 중)
+    if (clickTimeout) {
+      clearTimeout(clickTimeout);
+      setClickTimeout(null);
+      return; // 더블클릭이므로 단일클릭 동작 취소
+    }
+
+    // 단일클릭 딜레이 설정 (더블클릭 대기)
+    const timeout = setTimeout(() => {
+      setIsEditing(true);
+      setClickTimeout(null);
+    }, 250); // 250ms 대기
+
+    setClickTimeout(timeout);
+  };
+
+  const handleDoubleClick = (event: React.MouseEvent) => {
+    // 단일클릭 타임아웃 클리어
+    if (clickTimeout) {
+      clearTimeout(clickTimeout);
+      setClickTimeout(null);
+    }
+
+    // 더블클릭은 React Flow에서 처리하도록 이벤트 전파
+    // stopPropagation을 제거하여 React Flow의 onEdgeDoubleClick이 작동하도록 함
   };
 
   return (
@@ -65,7 +97,7 @@ export default function CustomEdge({
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                placeholder="프롬프트를 입력하세요..."
+                placeholder="{입력} 템플릿을 사용하여 프롬프트를 작성하세요..."
                 rows={3}
                 cols={40}
                 style={{
@@ -112,7 +144,8 @@ export default function CustomEdge({
           ) : (
             <div 
               className="edge-label"
-              onClick={() => setIsEditing(true)}
+              onClick={handleClick}
+              onDoubleClick={handleDoubleClick}
               style={{
                 background: '#fff3cd',
                 border: '1px solid #ffeaa7',

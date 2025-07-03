@@ -11,6 +11,8 @@ export default function InputNode({ data, id }: NodeProps<InputNodeData>) {
   const { deleteElements } = useReactFlow();
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(data.content || '');
+  const [isEditingLabel, setIsEditingLabel] = useState(false);
+  const [label, setLabel] = useState(data.label || '');
 
   const handleSave = () => {
     data.content = content;
@@ -20,6 +22,21 @@ export default function InputNode({ data, id }: NodeProps<InputNodeData>) {
   const handleCancel = () => {
     setContent(data.content || '');
     setIsEditing(false);
+  };
+
+  const handleLabelSave = () => {
+    data.label = label;
+    setIsEditingLabel(false);
+  };
+
+  const handleLabelCancel = () => {
+    setLabel(data.label || '');
+    setIsEditingLabel(false);
+  };
+
+  const handleLabelDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditingLabel(true);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -51,7 +68,27 @@ export default function InputNode({ data, id }: NodeProps<InputNodeData>) {
   const labelStyle = {
     fontWeight: 'bold',
     color: '#2c3e50',
-    fontSize: '14px'
+    fontSize: '14px',
+    cursor: 'pointer',
+    padding: '2px 4px',
+    borderRadius: '3px',
+    transition: 'background-color 0.2s'
+  };
+
+  const labelHoverStyle = {
+    ...labelStyle,
+    background: 'rgba(70, 130, 180, 0.1)'
+  };
+
+  const labelInputStyle = {
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    fontSize: '14px',
+    background: 'white',
+    border: '1px solid #4682b4',
+    borderRadius: '3px',
+    padding: '2px 4px',
+    outline: 'none'
   };
 
   const editBtnStyle = {
@@ -136,16 +173,66 @@ export default function InputNode({ data, id }: NodeProps<InputNodeData>) {
     fontSize: '12px'
   };
 
+  const labelButtonContainerStyle = {
+    display: 'flex',
+    gap: '4px',
+    marginTop: '4px'
+  };
+
+  const smallButtonStyle = {
+    padding: '2px 6px',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '10px'
+  };
+
   return (
     <div style={nodeStyle}>
       <div style={headerStyle}>
-        <span style={labelStyle}>{data.label}</span>
+        {isEditingLabel ? (
+          <div style={{ flex: 1 }}>
+            <input
+              style={labelInputStyle}
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleLabelSave();
+                if (e.key === 'Escape') handleLabelCancel();
+              }}
+              placeholder="노드 제목을 입력하세요"
+              autoFocus
+            />
+            <div style={labelButtonContainerStyle}>
+              <button 
+                style={{...smallButtonStyle, background: '#4CAF50', color: 'white'}} 
+                onClick={handleLabelSave}
+              >
+                저장
+              </button>
+              <button 
+                style={{...smallButtonStyle, background: '#f44336', color: 'white'}} 
+                onClick={handleLabelCancel}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        ) : (
+          <span 
+            style={labelStyle}
+            onDoubleClick={handleLabelDoubleClick}
+            title="더블클릭하여 제목 편집"
+          >
+            {data.label}
+          </span>
+        )}
         <div style={buttonGroupStyle}>
           <button 
             style={editBtnStyle}
             onClick={() => setIsEditing(true)}
             disabled={isEditing}
-            title="편집"
+            title="내용 편집"
           >
             ✏️
           </button>

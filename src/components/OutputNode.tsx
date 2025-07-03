@@ -6,15 +6,33 @@ export interface OutputNodeData {
   content: string;
   isLoading?: boolean;
   error?: string;
+  canBeInput?: boolean; // 다른 노드의 입력으로 사용될 수 있는지
 }
 
 export default function OutputNode({ data, id }: NodeProps<OutputNodeData>) {
   const { deleteElements } = useReactFlow();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isEditingLabel, setIsEditingLabel] = useState(false);
+  const [label, setLabel] = useState(data.label || '');
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     deleteElements({ nodes: [{ id }] });
+  };
+
+  const handleLabelSave = () => {
+    data.label = label;
+    setIsEditingLabel(false);
+  };
+
+  const handleLabelCancel = () => {
+    setLabel(data.label || '');
+    setIsEditingLabel(false);
+  };
+
+  const handleLabelDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditingLabel(true);
   };
 
   const nodeStyle = {
@@ -43,7 +61,22 @@ export default function OutputNode({ data, id }: NodeProps<OutputNodeData>) {
   const labelStyle = {
     fontWeight: 'bold',
     color: '#2c3e50',
-    fontSize: '14px'
+    fontSize: '14px',
+    cursor: 'pointer',
+    padding: '2px 4px',
+    borderRadius: '3px',
+    transition: 'background-color 0.2s'
+  };
+
+  const labelInputStyle = {
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    fontSize: '14px',
+    background: 'white',
+    border: '1px solid #32cd32',
+    borderRadius: '3px',
+    padding: '2px 4px',
+    outline: 'none'
   };
 
   const expandBtnStyle = {
@@ -118,10 +151,60 @@ export default function OutputNode({ data, id }: NodeProps<OutputNodeData>) {
     fontStyle: 'italic'
   };
 
+  const labelButtonContainerStyle = {
+    display: 'flex',
+    gap: '4px',
+    marginTop: '4px'
+  };
+
+  const smallButtonStyle = {
+    padding: '2px 6px',
+    border: 'none',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    fontSize: '10px'
+  };
+
   return (
     <div style={nodeStyle}>
       <div style={headerStyle}>
-        <span style={labelStyle}>{data.label}</span>
+        {isEditingLabel ? (
+          <div style={{ flex: 1 }}>
+            <input
+              style={labelInputStyle}
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleLabelSave();
+                if (e.key === 'Escape') handleLabelCancel();
+              }}
+              placeholder="노드 제목을 입력하세요"
+              autoFocus
+            />
+            <div style={labelButtonContainerStyle}>
+              <button 
+                style={{...smallButtonStyle, background: '#4CAF50', color: 'white'}} 
+                onClick={handleLabelSave}
+              >
+                저장
+              </button>
+              <button 
+                style={{...smallButtonStyle, background: '#f44336', color: 'white'}} 
+                onClick={handleLabelCancel}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        ) : (
+          <span 
+            style={labelStyle}
+            onDoubleClick={handleLabelDoubleClick}
+            title="더블클릭하여 제목 편집"
+          >
+            {data.label}
+          </span>
+        )}
         <div style={buttonGroupStyle}>
           {data.content && (
             <button 
@@ -178,7 +261,15 @@ export default function OutputNode({ data, id }: NodeProps<OutputNodeData>) {
         type="source"
         position={Position.Right}
         id="output"
-        style={{ background: '#555' }}
+        isConnectable={true}
+        style={{ 
+          background: '#32cd32', 
+          width: '12px', 
+          height: '12px',
+          border: '2px solid white',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+        }}
+        title="여러 노드에 연결 가능"
       />
       
       <style>{`
