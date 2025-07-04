@@ -63,7 +63,7 @@ bun run preview
 - 긴 텍스트 스크롤 지원
 
 ### 🤖 AI 모델 지원
-- **OpenAI**: GPT-4o, GPT-4o Mini, GPT-4 Turbo, GPT-4, GPT-3.5 Turbo
+- **OpenAI**: GPT-o3, GPT-o4 Mini, GPT-4.1, GPT-4.1 Mini, GPT-4o, GPT-4o Mini, GPT-4 Turbo, GPT-4, GPT-3.5 Turbo
 - **Anthropic**: Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Sonnet, Claude 3 Haiku
 - **Google**: Gemini 1.5 Pro, Gemini 1.5 Flash, Gemini Pro, Gemini Pro Vision
 - **Ollama (로컬)**: Llama 3.2/3.1/3/2, Mistral, CodeLlama, LLaVA, BakLLaVA, Gemma 2, Qwen 2.5
@@ -162,6 +162,10 @@ prompt-graph/
 ### 🔥 OpenAI (API 키 필요)
 | 모델 | 멀티모달 | 설명 |
 |------|----------|------|
+| GPT-o3 | ✅ | 차세대 추론 모델, 최고 성능 |
+| GPT-o4 Mini | ✅ | 경량화된 o4 모델, 빠른 처리 |
+| GPT-4.1 | ✅ | 개선된 GPT-4, 향상된 멀티모달 |
+| GPT-4.1 Mini | ✅ | 경량화된 GPT-4.1, 비용 효율적 |
 | GPT-4o | ✅ | 최신 멀티모달 모델, 텍스트/이미지 처리 |
 | GPT-4o Mini | ✅ | 경량화된 GPT-4o, 비용 효율적 |
 | GPT-4 Turbo | ✅ | 향상된 성능, 멀티모달 지원 |

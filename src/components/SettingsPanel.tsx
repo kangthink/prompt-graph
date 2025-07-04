@@ -14,7 +14,11 @@ interface SettingsPanelProps {
 }
 
 const AVAILABLE_MODELS = [
-  // OpenAI 모델
+  // OpenAI 모델 (최신순)
+  { value: 'o3', label: 'GPT-o3 (최신, 멀티모달)', multimodal: true },
+  { value: 'o4-mini', label: 'GPT-o4 Mini (최신, 멀티모달)', multimodal: true },
+  { value: 'gpt-4.1', label: 'GPT-4.1 (최신, 멀티모달)', multimodal: true },
+  { value: 'gpt-4.1-mini', label: 'GPT-4.1 Mini (최신, 멀티모달)', multimodal: true },
   { value: 'gpt-4o', label: 'GPT-4o (멀티모달)', multimodal: true },
   { value: 'gpt-4o-mini', label: 'GPT-4o Mini (멀티모달)', multimodal: true },
   { value: 'gpt-4-turbo', label: 'GPT-4 Turbo (멀티모달)', multimodal: true },
