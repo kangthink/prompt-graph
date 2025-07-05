@@ -1,6 +1,13 @@
-# Prompt Graph
+# 🚀 Prompt Graph
 
-React Flow 기반의 프롬프트 그래프 애플리케이션입니다.
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Stars](https://img.shields.io/github/stars/kangthink/prompt-graph.svg)](https://github.com/kangthink/prompt-graph/stargazers)
+[![Issues](https://img.shields.io/github/issues/kangthink/prompt-graph.svg)](https://github.com/kangthink/prompt-graph/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/kangthink/prompt-graph.svg)](https://github.com/kangthink/prompt-graph/pulls)
+
+React Flow 기반의 오픈소스 **비주얼 프롬프트 워크플로우** 도구입니다. 
+
+드래그 앤 드롭으로 AI 프롬프트 체인을 구성하고, 다양한 LLM 모델과 연동하여 복잡한 AI 워크플로우를 쉽게 만들 수 있습니다.
 
 ## 기술 스택
 
@@ -221,4 +228,72 @@ prompt-graph/
    - ⚙️ 설정 버튼 클릭
    - API 키 입력 또는 Ollama 로컬 설정
    - 원하는 모델 선택
-   - 저장 후 사용 시작 
+   - 저장 후 사용 시작
+
+## 🤝 오픈소스 기여
+
+Prompt Graph는 오픈소스 프로젝트입니다! 여러분의 기여를 환영합니다.
+
+### 🚀 빠른 기여 방법
+
+1. **⭐ Star** 이 저장소에 별표를 눌러주세요
+2. **🐛 버그 신고** [이슈 탭](https://github.com/kangthink/prompt-graph/issues)에서 버그 리포트
+3. **💡 기능 제안** 새로운 아이디어나 개선 사항 제안
+4. **🔧 코드 기여** Pull Request로 코드 개선
+5. **📖 문서 개선** README나 문서 업데이트
+
+### 📋 기여 가이드
+
+자세한 기여 방법은 [CONTRIBUTING.md](CONTRIBUTING.md)를 참고해주세요.
+
+- **개발 환경 설정**: `bun install` → `bun dev`
+- **커밋 컨벤션**: `feat:`, `fix:`, `docs:` 등 사용
+- **코드 스타일**: TypeScript + React 베스트 프랙티스
+- **이슈 템플릿**: 버그 리포트, 기능 요청 템플릿 활용
+
+### 🎯 기여 우선순위
+
+#### 🔥 High Priority
+- 새로운 LLM 모델 지원 (Cohere, PaLM 등)
+- 모바일 반응형 개선
+- 성능 최적화 및 메모리 관리
+
+#### 📝 Medium Priority  
+- 새로운 노드 타입 (조건 분기, 루프 등)
+- 다국어 지원 (i18n)
+- 다크 모드 지원
+
+#### 💡 Ideas Welcome
+- 플러그인 시스템 설계
+- 템플릿 마켓플레이스
+- 실시간 협업 기능
+- 워크플로우 버전 관리
+
+### 🏆 기여자
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+기여해주신 모든 분들께 감사드립니다! ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+### 📄 라이선스
+
+이 프로젝트는 [MIT 라이선스](LICENSE) 하에 배포됩니다.
+
+### 🙏 지원 및 후원
+
+Prompt Graph가 유용하다면:
+- ⭐ GitHub에서 별표 눌러주기
+- 🐦 소셜미디어에서 공유하기
+- 💝 [후원하기](https://github.com/sponsors/kangthink) (향후 예정)
+
+---
+
+**🚀 함께 더 나은 AI 도구를 만들어가요!**
+
+Made with ❤️ by the Prompt Graph community 

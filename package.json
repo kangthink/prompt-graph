@@ -1,7 +1,40 @@
 {
   "name": "prompt-graph",
   "version": "1.0.0",
-  "description": "React Flow based prompt graph application",
+  "description": "Open-source visual prompt workflow tool built with React Flow. Create AI prompt chains with drag-and-drop interface, supporting multiple LLM models including OpenAI, Anthropic, Gemini, and Ollama.",
+  "keywords": [
+    "ai",
+    "llm",
+    "prompt",
+    "workflow",
+    "react-flow",
+    "openai",
+    "anthropic",
+    "claude",
+    "gemini",
+    "ollama",
+    "visual-programming",
+    "drag-and-drop"
+  ],
+  "homepage": "https://github.com/kangthink/prompt-graph#readme",
+  "bugs": {
+    "url": "https://github.com/kangthink/prompt-graph/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kangthink/prompt-graph.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "kangthink",
+    "url": "https://github.com/kangthink"
+  },
+  "contributors": [
+    {
+      "name": "kangthink",
+      "url": "https://github.com/kangthink"
+    }
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",

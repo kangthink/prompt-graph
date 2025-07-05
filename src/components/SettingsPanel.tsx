@@ -38,7 +38,7 @@ const AVAILABLE_MODELS = [
   { value: 'gemini-pro-vision', label: 'Gemini Pro Vision (멀티모달)', multimodal: true },
   
   // Ollama 로컬 모델 (인기 모델들)
-  { value: 'ollama:llama3.2', label: 'Ollama: Llama 3.2 (로컬)', multimodal: false },
+  { value: 'ollama:llama3.2:3b', label: 'Ollama: Llama 3.2 (로컬)', multimodal: false },
   { value: 'ollama:llama3.1', label: 'Ollama: Llama 3.1 (로컬)', multimodal: false },
   { value: 'ollama:llama3', label: 'Ollama: Llama 3 (로컬)', multimodal: false },
   { value: 'ollama:llama2', label: 'Ollama: Llama 2 (로컬)', multimodal: false },
